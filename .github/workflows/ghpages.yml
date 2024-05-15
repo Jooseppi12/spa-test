@@ -25,12 +25,12 @@ jobs:
             add source https://nuget.pkg.github.com/dotnet-websharper/index.json 
             --name github 
             --username Jooseppi12 
-            --password ${{ secrets.WSFEED }} 
+            --password "${{ secrets.WSFEED }}" 
             --store-password-in-clear-text
 
       - run: npm install -g vite
       - run: dotnet build
-      - run: npx vite build
+      - run: npx vite build --outDir ../dist
         working-directory: wwwroot/
 
 
