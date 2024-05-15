@@ -1,0 +1,42 @@
+name: Build and Deploy
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false 
+          submodules: true
+
+      - name: Build
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.0.x'
+
+      - name: Add GitHub registry NuGet source
+        run: 
+          dotnet nuget 
+            add source https://nuget.pkg.github.com/dotnet-websharper/index.json 
+            --name github 
+            --username Jooseppi12 
+            --password ${{ secrets.WSFEED }} 
+            --store-password-in-clear-text
+
+      - run: npm install -g vite
+      - run: dotnet build
+      - run: npx vite build
+        working-directory: wwwroot/
+
+
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: dist

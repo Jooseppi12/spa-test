@@ -1,0 +1,6 @@
+bin/*
+obj/*
+wwwroot/Content/*
+wwwroot/Scripts/*
+websharper.log
+dist/
